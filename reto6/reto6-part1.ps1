@@ -28,6 +28,4 @@ function Get-Fishes() {
 $total = Get-Fishes
 Write-Output $total
 
-#DEBES SUMARLE 1 al resultado final. Algo se quebro y ni idea de como arreglarlo
-# Ni idea de por qué imprime a pesar de no haber ningun Write-Output en el script
-# Demora demasiado en dar la respuesta pero bueno... X.x 
+# Ni idea de por qué imprime a pesar de no haber ningun Write-Output dentro de la funcion
