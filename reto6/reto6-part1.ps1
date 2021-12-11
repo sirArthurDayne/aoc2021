@@ -4,7 +4,7 @@
 $filedata = Get-Content "../src/data6.txt"
 $fishesTimer = [System.Collections.ArrayList]::new()
 $numSlice = [int[]]$filedata.Split(',')
-$days = 256
+$days = 80
 foreach ($num in $numSlice) {
         $fishesTimer.Add($num) 
     }
