@@ -25,8 +25,8 @@ function get-result2()
     for ($index=3; $index -lt $fileData.Length; $index++) {
         $a = 0
         $b = 0
-        $prevArr | Foreach {$a += $_}
-        $currArr | Foreach {$b += $_}
+        $prevArr | Foreach-Object {$a += $_}
+        $currArr | Foreach-Object {$b += $_}
 
         if ($a -lt $b) {
             $counter++

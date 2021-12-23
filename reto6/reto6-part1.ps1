@@ -6,7 +6,7 @@ $fishesTimer = [System.Collections.ArrayList]::new()
 $numSlice = [int[]]$filedata.Split(',')
 $days = 80
 foreach ($num in $numSlice) {
-        $fishesTimer.Add($num) 
+        $fishesTimer.Add($num) | Out-Null
     }
 
 function Get-Fishes() {
@@ -18,7 +18,7 @@ function Get-Fishes() {
                         $fishesTimer.Add(8)#nuevo pez
                 }
                 else {
-                    $fishesTimer[$j] -= 1 
+                    $fishesTimer[$j] -= 1
                 }
             }
     }
@@ -27,5 +27,6 @@ function Get-Fishes() {
 
 $total = Get-Fishes
 Write-Output $total
+
 
 # Ni idea de por qué imprime a pesar de no haber ningun Write-Output dentro de la funcion
