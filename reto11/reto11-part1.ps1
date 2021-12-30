@@ -3,10 +3,9 @@
 
 $filedata = Get-Content "../src/data11.txt"
 
-#parse data into octopusay
+#parse data into octopus
 $gridSize = 10
-[int[,]]$octopus = (New-Object 'int[,]'$($gridSize+1),$($gridSize+1))
-
+[int[,]]$octopus = (New-Object 'int[,]'$($gridSize),$($gridSize))
 $x,$y = 0,0
 foreach ($line in $filedata) {
         foreach ($c in $line.ToCharArray()) {
@@ -17,44 +16,43 @@ foreach ($line in $filedata) {
             $x++
     }
 
-$total = 0
-$steps = 1
-
-for ($i=0; $i -lt $steps; $i++) {
-        #track octopus
-        [bool[,]]$flashed = (New-Object 'bool[,]'$($gridSize+1),$($gridSize+1))
-        #update values
-        for ($r=0;$r -lt $gridSize;$r) {
-            for ($c=0;$c -lt $gridSize;$c) {
-                $octopus[$r, $c]++
-            }}
-    # if we have 9 -> 0 and increase every neighbor cell by one 
-        while ($true) {
-            $keep_looping = $false
-            # [int[,]]$octopusChange= (New-Object 'int[,]'$($gridSize+1),$($gridSize+1))
-        for ($r=0;$r -lt $gridSize;$r) {
-            for ($c=0;$c -lt $gridSize;$c) {
-                if ( -not$flashed[$r, $c] -and $octopus[$r, $c] -gt 9) {
-                        $total++
-                        flashed[$r, $c] = $true
-                        $keep_looping = $true
-
-                        for ($di=-1;$di -lt 2;$di++) {
-                            for ($dj=-1;$dj -lt 2;$dj++) {
-                                if ($di -eq 0 -and $dj -eq 0) {
-                                        continue
-                                    }
-                                    $ii = $r + $di
-                                    $jj = $c + $dj
-
-                                    if () {
-                                            continue
-                                        }
-                                    $octopus[$ii, $jj] += 1
-                    }}
+function flash([int]$r, [int]$c) {
+    $count = 1
+    #set cell to zero
+    $octopus[$r,$c] = 0
+    #update neighbors state using axis
+    foreach ($dr in @(-1,0,1)) {
+        foreach ($dc in @(-1,0,1)) {
+            #check state of 4 adyacent neighbors and make sure not checking the current cell
+                if ( ($r+$dr -ge 0 -and $r+$dr -lt $gridSize -and $c+$dc -ge 0 -and $c+$dc -lt $gridSize) -and $octopus[$($r+$dr), $($c+$dc)] -ne 0) {
+                        $octopus[$($r+$dr),$($c+$dc)] += 1
+                        #check for neighbors state before updating the count
+                        if ($octopus[$($r+$dr),$($c+$dc)] -gt 9) {
+                            #traverse neighbors recursively for updating count
+                            $count += flash $($r+$dr) $($c+$dc)
+                        }
+                    }
             }
-            }}
-# if we have 0 -> total++
+        }
+    return $count
     }
-}
-Write-Host $total -ForegroundColor green
+$total = 0
+$steps = 100
+# foreach($b in $octopus) { "$b" }
+
+for ($i=0;$i -lt $steps; $i++) {
+        #traverse and increase each cell
+        for ($r=0;$r -lt $gridSize; $r++) {
+            for($c=0;$c -lt $gridSize; $c++) {
+                $octopus[$r,$c] += 1
+            }}
+        #check for flash state
+        for ($r=0;$r -lt $gridSize; $r++) {
+            for($c=0;$c -lt $gridSize; $c++) {
+                if ($octopus[$r,$c] -gt 9) {
+                    Write-Host "$r, $c"
+                        $total += flash $r $c
+                    }
+            }}
+    }
+Write-Host "Total part1: $total" -foregroundcolor yellow
