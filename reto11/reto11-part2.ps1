@@ -37,7 +37,7 @@ function flash([int]$r, [int]$c) {
     return $count
     }
 $flashes = 0
-$total = 1 #count the step
+$total = 0 #count the step
 #iterate until you found the first sync state
 while ($true) {
         $new_flashes = 0
@@ -54,9 +54,9 @@ while ($true) {
                     }
             }}
         $flashes += $new_flashes
+        $total++
         if ($new_flashes -eq 100) {
                 Write-Host "Step: $total | totalflashes: $flashes" -foregroundcolor yellow
                 break
             }
-        $total++
 }
