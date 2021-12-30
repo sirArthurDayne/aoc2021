@@ -1,5 +1,5 @@
 #Advent of code 2021
-# sirArthurDayne day 11 part1
+# sirArthurDayne day 11 part2
 
 $filedata = Get-Content "../src/data11.txt"
 
@@ -36,11 +36,11 @@ function flash([int]$r, [int]$c) {
         }
     return $count
     }
-$total = 0
-$steps = 100
-# foreach($b in $octopus) { "$b" }
-
-for ($i=0;$i -lt $steps; $i++) {
+$flashes = 0
+$total = 1 #count the step
+#iterate until you found the first sync state
+while ($true) {
+        $new_flashes = 0
         #traverse and increase each cell
         for ($r=0;$r -lt $gridSize; $r++) {
             for($c=0;$c -lt $gridSize; $c++) {
@@ -50,8 +50,13 @@ for ($i=0;$i -lt $steps; $i++) {
         for ($r=0;$r -lt $gridSize; $r++) {
             for($c=0;$c -lt $gridSize; $c++) {
                 if ($octopus[$r,$c] -gt 9) {
-                        $total += flash $r $c
+                        $new_flashes += flash $r $c
                     }
             }}
-    }
-Write-Host "Total part1: $total" -foregroundcolor yellow
+        $flashes += $new_flashes
+        if ($new_flashes -eq 100) {
+                Write-Host "Step: $total | totalflashes: $flashes" -foregroundcolor yellow
+                break
+            }
+        $total++
+}
