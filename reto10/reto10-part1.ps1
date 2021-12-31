@@ -18,12 +18,6 @@ class Stack {
 
 #parse data
 $filedata = Get-Content "../src/data10.txt"
-$pointsTable = [ordered]@{
-    ")" = 3;
-    "]" = 57;
-    "}" = 1197;
-    ">" = 25137;
-    }
 $incorrectTotals = [ordered]@{
     ")" = 0;
     "]" = 0;
@@ -65,10 +59,22 @@ foreach ($line in $filedata) {
         #clear before next iteration
         $stack.Clear()
     }
+$incorrectTotals.Remove("}")
+$incorrectTotals.Remove(")")
+$incorrectTotals.Remove(">")
+$incorrectTotals.Remove("]")
 $incorrectTotals
 $total = 0
-$pointsTable.keys | % {
-        $total += $pointsTable[$_] * $incorrectTotals[[string]$_]
+$incorrectTotals.keys | ForEach-Object {
+        if ($_ -eq "}") {
+            $total += $incorrectTotals[$_] * 1197
+        }elseif ($_ -eq "]") {
+            $total += $incorrectTotals[$_] * 57
+        }elseif ($_ -eq ")") {
+            $total += $incorrectTotals[$_] * 3
+        }elseif ($_ -eq ">") {
+            $total += $incorrectTotals[$_] * 25137
+            }
     }
-$total
+Write-Host $total -ForegroundColor yellow
 #total 323,691
